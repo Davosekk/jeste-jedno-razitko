@@ -44,7 +44,9 @@ python3 -m venv .venv
 
 ## Windows .exe
 
-Python verzi je potřeba sestavit na Windows; staré .exe z Godotu není sestavení tohoto kódu. V terminálu VS Code na Windows:
+Hotová aplikace pro Windows je v [úspěšném sestavení na GitHubu](https://github.com/Davosekk/jeste-jedno-razitko/actions/runs/44131689905) dole v části **Artifacts → Jeste-jedno-razitko-Windows**. Stáhni ZIP, rozbal ho a spusť `Jeste_jedno_razitko.exe`. Je potřeba být přihlášený k účtu s přístupem do tohoto soukromého repozitáře. Tento výstup je uchován 14 dní; nový lze vytvořit v Actions přes Run workflow.
+
+Vlastní .exe můžeš sestavit v terminálu VS Code na Windows:
 
 ```powershell
 .venv\Scripts\python.exe -m pip install -r requirements-build.txt
@@ -53,7 +55,7 @@ Python verzi je potřeba sestavit na Windows; staré .exe z Godotu není sestave
 
 Výsledek je `dist/Jeste_jedno_razitko.exe`. Hráč už Python ani Pygame instalovat nemusí. Skript `vytvor_exe.bat` provede instalaci závislostí, testy a sestavení přes Python dostupný jako `python`.
 
-Připravený GitHub Actions postup `windows.yml` spustí stejné testy a sestaví .exe na Windows po odeslání do repozitáře. Dokud běh skutečně neskončí úspěšně, není Windows sestavení této verze potvrzené.
+GitHub Actions postup `windows.yml` spustí testy a sestaví .exe na Windows po odeslání do repozitáře.
 
 ## Testy
 
@@ -65,4 +67,4 @@ Repozitář nemá obsahovat `.venv`, `__pycache__`, `build` ani `dist`. Commity 
 
 ## Ověření verze 0.1
 
-Prošlo 17 automatických testů pravidel, celého úkolu, dialogových větví a kolizí. Celý úvodní úkol byl dohrán klávesnicí v grafickém okně Pygame na Linuxu. Windows sestavení Python verze zatím nebylo vytvořené ani spuštěné; připravený postup je uveden výše.
+Prošlo 17 automatických testů pravidel, celého úkolu, dialogových větví a kolizí. Celý úvodní úkol byl dohrán klávesnicí v grafickém okně Pygame na Linuxu. Dne 17. 11. 2026 prošly testy i sestavení .exe na Windows v GitHub Actions (commit `757665d`). Samotné hraní ve Windows .exe zatím nebylo ručně ověřené.
