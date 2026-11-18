@@ -1,7 +1,8 @@
 """Ještě jedno razítko — jednoduchá 2D adventura v Pythonu a Pygame."""
 import math
 import pygame
-from pribeh import novy_stav, proved, UKOLY, INVENTAR
+from pribeh import novy_stav, proved, UKOLY, INVENTAR, aktualni_ukol
+from mistnosti import MAPY, aktivni_mapa, kresli_mistnost
 
 # 1. NASTAVENÍ: souřadnice jsou v pixelech, rychlost v pixelech za sekundu.
 SIRKA, VYSKA = 1152, 720
@@ -33,7 +34,9 @@ def telo(pozice):
     return pygame.Rect(round(pozice.x) - 12, round(pozice.y) - 12, 24, 24)
 
 
-def posun_hrace(pozice, smer, cas):
+def posun_hrace(pozice, smer, cas, prekazky=None):
+    if prekazky is None:
+        prekazky = PREKAZKY
     if smer.length() == 0:
         return pozice.copy()
     # Normalizace zabrání rychlejšímu pohybu šikmo.
@@ -43,21 +46,25 @@ def posun_hrace(pozice, smer, cas):
     kroku = max(1, math.ceil(posun.length() / 4))
     for _ in range(kroku):
         kandidat = vysledek + pygame.Vector2(posun.x / kroku, 0)
-        if not any(telo(kandidat).colliderect(p) for p in PREKAZKY):
+        if not any(telo(kandidat).colliderect(p) for p in prekazky):
             vysledek = kandidat
         kandidat = vysledek + pygame.Vector2(0, posun.y / kroku)
-        if not any(telo(kandidat).colliderect(p) for p in PREKAZKY):
+        if not any(telo(kandidat).colliderect(p) for p in prekazky):
             vysledek = kandidat
     return vysledek
 
 
-def nejblizsi_predmet(pozice):
+def nejblizsi_predmet(pozice, predmety=None, prekazky=None):
+    if predmety is None:
+        predmety = PREDMETY
+    if prekazky is None:
+        prekazky = PREKAZKY
     nejblizsi = None
     vzdalenost = 70
-    for nazev, (bod, popisek) in PREDMETY.items():
+    for nazev, (bod, popisek) in predmety.items():
         vzd = pozice.distance_to(bod)
         # Úsečka od hráče k předmětu nesmí protínat překážku.
-        pres_zed = any(p.clipline(tuple(pozice), bod) for p in PREKAZKY)
+        pres_zed = any(p.clipline(tuple(pozice), bod) for p in prekazky)
         if vzd < vzdalenost and not pres_zed:
             nejblizsi = nazev
             vzdalenost = vzd
@@ -186,7 +193,7 @@ def main():
     pygame.display.init()
     pygame.font.init()
     okno = pygame.display.set_mode((SIRKA, VYSKA), pygame.SCALED | pygame.RESIZABLE)
-    pygame.display.set_caption("Ještě jedno razítko — Python 0.1")
+    pygame.display.set_caption("Ještě jedno razítko — Python 0.2")
     hodiny = pygame.time.Clock()
     stav = novy_stav()
     pozice = pygame.Vector2(START)
@@ -195,6 +202,7 @@ def main():
     bezi = True
 
     while bezi:
+        prekazky, predmety = aktivni_mapa(stav, PREKAZKY, PREDMETY)
         cas = hodiny.tick(60) / 1000  # Milisekundy převedeme na sekundy.
         for udalost in pygame.event.get():
             akce = None
@@ -220,7 +228,7 @@ def main():
                             break
             elif udalost.type == pygame.KEYDOWN:
                 if udalost.key == pygame.K_e:
-                    akce = nejblizsi_predmet(pozice)
+                    akce = nejblizsi_predmet(pozice, predmety, prekazky)
                 elif udalost.key == pygame.K_ESCAPE:
                     akce = "pauza"
                 elif udalost.key == pygame.K_r:
@@ -234,28 +242,34 @@ def main():
                 rozhovor = None
                 vybrano = 0
             elif akce is not None:
+                puvodni_mistnost = stav.get("mistnost", "recepce")
                 rozhovor = proved(akce, stav)
+                if stav.get("mistnost", "recepce") != puvodni_mistnost:
+                    pozice = pygame.Vector2(576, 532)
                 vybrano = 0
+            prekazky, predmety = aktivni_mapa(stav, PREKAZKY, PREDMETY)
 
         if rozhovor is None and pygame.key.get_focused():
             klavesy = pygame.key.get_pressed()
             dx = int(klavesy[pygame.K_d] or klavesy[pygame.K_RIGHT]) - int(klavesy[pygame.K_a] or klavesy[pygame.K_LEFT])
             dy = int(klavesy[pygame.K_s] or klavesy[pygame.K_DOWN]) - int(klavesy[pygame.K_w] or klavesy[pygame.K_UP])
-            pozice = posun_hrace(pozice, pygame.Vector2(dx, dy), cas)
+            pozice = posun_hrace(pozice, pygame.Vector2(dx, dy), cas, prekazky)
 
         okno.fill(POZADI)
-        kresli_kancelar(okno, stav)
+        if stav.get("mistnost", "recepce") == "recepce":
+            kresli_kancelar(okno, stav)
+        kresli_mistnost(okno, stav, napis)
         kresli_hrace(okno, pozice)
         napis(okno, "JEŠTĚ JEDNO RAZÍTKO", 48, 24, 39)
-        napis(okno, "PYTHON • PROTOTYP 0.1", 850, 37, 22, ZLATA)
+        napis(okno, "PYTHON • VERZE 0.2", 850, 37, 22, ZLATA)
         napis(okno, "AKTUÁLNÍ ÚKOL", 48, 100, 19, "#94b7ac")
-        napis(okno, UKOLY[stav["formular"]], 212, 98, 24)
+        napis(okno, aktualni_ukol(stav), 212, 98, 24)
         napis(okno, "U SEBE", 48, 622, 18, "#94b7ac")
-        napis(okno, INVENTAR[stav["formular"]], 48, 646, 25, ZLATA)
-        predmet = nejblizsi_predmet(pozice)
+        napis(okno, INVENTAR[stav["formular"]] + (" + záznam" if stav.get("zaznam") else ""), 48, 646, 20, ZLATA)
+        predmet = nejblizsi_predmet(pozice, predmety, prekazky)
         if predmet is not None and rozhovor is None:
-            pygame.draw.circle(okno, "#ba883f", PREDMETY[predmet][0], 21, 3)
-            napoveda = "E • " + PREDMETY[predmet][1]
+            pygame.draw.circle(okno, "#ba883f", predmety[predmet][0], 21, 3)
+            napoveda = "E • " + predmety[predmet][1]
         else:
             napoveda = "Přijdi blíž k předmětu nebo úřednici."
         napis(okno, napoveda, 390, 636, 25)

@@ -17,14 +17,14 @@ def proved(akce, stav):
     if akce == "zavrit":
         return None
     if akce == "uvod":
-        return dialog("Ještě jedno razítko", "Vaše třída chystá školní turnaj. Potřebuješ povolení z úřadu.\n\nNajdi správný formulář, vyplň ho a předej úřednici. Tohle je první krátká verze hry.", [("Vstoupit na úřad", "zavrit")])
+        return dialog("Ještě jedno razítko", "Vaše třída chystá školní turnaj. Potřebuješ povolení z úřadu.\n\nNajdi správný formulář, vyplň ho a předej úřednici. Potom prozkoumej archiv a schvalovací kancelář.", [("Vstoupit na úřad", "zavrit")])
     if akce == "pauza":
         return dialog("Pauza", "Úřední kolečko může chvíli počkat.", [("Pokračovat", "zavrit"), ("Začít znovu", "restart"), ("Ukončit hru", "konec")])
     if akce == "novy_zacatek":
         return dialog("Začít znovu?", "Obnoví se hráč i všechny dokumenty.", [("Zpět do hry", "zavrit"), ("Ano, začít znovu", "restart")])
     if akce == "urednice":
         if formular == 3:
-            return dialog("Paní Novotná", "Vaše žádost už je přijatá. Další vyřizování přidáme v příštích dnech.", [("Zpět", "zavrit"), ("Zkusit znovu", "restart")])
+            return dialog("Paní Novotná", "Žádost je přijatá. Odemkla jsem vám archiv vlevo. Najděte záznam o sálu a odneste ho do kanceláře vpravo.", [("Zpět", "zavrit"), ("Zkusit znovu", "restart")])
         return dialog("Paní Novotná • příjem žádostí", "Dobrý den. Co potřebujete vyřídit?", [("Co potřebuji na školní turnaj?", "napoveda"), ("Chci odevzdat žádost", "odevzdat"), ("Na shledanou", "zavrit")])
     if akce == "napoveda":
         return dialog("Nejdřív správný formulář", "Na turnaj potřebujete A-38. Vlevo si jej vezměte, vpravo vyplňte a podepište. Potom ho přineste sem.", [("Děkuji", "zavrit")])
@@ -61,7 +61,34 @@ def proved(akce, stav):
             return dialog("Vráceno k doplnění", "Chybí údaje a podpis. Vyplňte je u stolku vpravo. Formulář ti zůstává.", [("Doplním údaje", "zavrit")])
         if formular == 2:
             stav["formular"] = 3
-        return dialog("První úkol hotový!", "Žádost byla přijatá. Našel jsi správný formulář, vyplnil ho a odevzdal.\n\nTady končí prototyp. Další část úřadu a razítka přidáme postupně.", [("Ještě se projít", "zavrit"), ("Hrát od začátku", "restart")])
+        return dialog("První úkol hotový!", "Žádost byla přijatá. Našel jsi správný formulář, vyplnil ho a odevzdal.\n\nÚřednice odemyká archiv vlevo. Najdi tam záznam o sálu; s ním tě pustí do kanceláře vpravo.", [("Ještě se projít", "zavrit"), ("Hrát od začátku", "restart")])
+    if akce == "archiv":
+        if formular < 3:
+            return dialog("Zamčený archiv", "Nejdřív odevzdej vyplněnou žádost. Úřednice potom odemkne archiv.", [("Zpět", "zavrit")])
+        stav["mistnost"] = "archiv"
+        return dialog("2 / 3 • Archiv", "Projdi mezi regály. Ve vzdálené kartotéce najdi záznam o sálu pro školní turnaj.", [("Prozkoumat archiv", "zavrit")])
+    if akce == "recepce":
+        stav["mistnost"] = "recepce"
+        return None
+    if akce == "kartoteka":
+        return dialog("Kartotéka", "Hledáš doklad pro školní turnaj. Který záznam potřebuješ?", [("Sál • sportovní a školní akce", "zaznam"), ("Parkoviště • rezervace stání", "spatny_zaznam"), ("Zpět", "zavrit")])
+    if akce == "spatny_zaznam":
+        return dialog("Nesprávný šanon", "Tohle je evidence parkovišť. Zkus šanon se sálem.", [("Vybrat znovu", "kartoteka")])
+    if akce == "zaznam":
+        if formular < 3 or stav.get("mistnost") != "archiv":
+            return dialog("Nejdřív do archivu", "Záznam musíš vyzvednout v archivu po přijetí žádosti.", [("Zpět", "zavrit")])
+        stav["zaznam"] = True
+        return dialog("Získáno: záznam o sálu", "Sál je vhodný pro školní turnaj. Vrať se spodními dveřmi a zamiř do kanceláře vpravo.", [("Pokračovat", "zavrit")])
+    if akce == "kancelar":
+        if not stav.get("zaznam"):
+            return dialog("Průchod uzavřen", "Ke schválení potřebuješ záznam o sálu z archivu vlevo.", [("Zpět", "zavrit")])
+        stav["mistnost"] = "kancelar"
+        return dialog("3 / 3 • Schvalovací kancelář", "Obejdi přepážky a dojdi k panu Dvořákovi. Máš všechny potřebné podklady.", [("Vstoupit", "zavrit")])
+    if akce == "schvaleni":
+        if formular != 3 or not stav.get("zaznam") or stav.get("mistnost") != "kancelar":
+            return dialog("Chybí podklady", "Nejdřív podej žádost a vyzvedni záznam v archivu.", [("Zpět", "zavrit")])
+        stav["schvaleno"] = True
+        return dialog("Dnešní úsek splněný!", "Pan Dvořák zkontroloval záznam a přidal razítko. Prošel jsi všechny tři části úřadu. Konečné rozhodnutí a dvě zakončení doplníme v dalších dnech.", [("Prohlédnout úřad", "zavrit"), ("Začít znovu", "restart")])
     raise ValueError("Neznámá akce: " + akce)
 
 
@@ -72,3 +99,13 @@ UKOLY = [
     "Úvodní úkol splněn. Další část přijde příště.",
 ]
 INVENTAR = ["Prázdné kapsy", "A-38 • nevyplněný", "A-38 • podepsaný", "Žádost odevzdána"]
+
+
+def aktualni_ukol(stav):
+    if stav.get("schvaleno"):
+        return "Tři části úřadu splněny. Záznam má kontrolní razítko."
+    if stav["formular"] < 3:
+        return UKOLY[stav["formular"]]
+    if not stav.get("zaznam"):
+        return "V archivu vlevo najdi záznam o sálu."
+    return "Zanes záznam do schvalovací kanceláře vpravo."
