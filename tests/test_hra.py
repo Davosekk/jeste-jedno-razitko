@@ -130,10 +130,14 @@ class TestMistnosti(unittest.TestCase):
         self.assertEqual(s['mistnost'], 'archiv')
         proved('spatny_zaznam', s)
         self.assertFalse(s.get('zaznam'))
+        for a in ['cerveny', 'modry', 'zeleny', 'cerveny']:
+            proved(a, s)
         proved('zaznam', s)
         proved('recepce', s)
         proved('kancelar', s)
         self.assertEqual(s['mistnost'], 'kancelar')
+        for a in ['platba', 'evidence', 'pecet', 'podpis']:
+            proved(a, s)
         proved('schvaleni', s)
         proved('schvaleni', s)
         self.assertTrue(s['schvaleno'])
@@ -146,8 +150,8 @@ class TestMistnosti(unittest.TestCase):
         from collections import deque
         from main import telo, PREDMETY, START
         from mistnosti import aktivni_mapa
-        for mistnost in ['recepce', 'archiv', 'kancelar']:
-            prekazky, predmety = aktivni_mapa({'formular': 3, 'mistnost': mistnost}, PREKAZKY, PREDMETY)
+        for mistnost, mriz in [('recepce', False), ('archiv', False), ('archiv', True), ('kancelar', True)]:
+            prekazky, predmety = aktivni_mapa({'formular': 3, 'mistnost': mistnost, 'mriz': mriz}, PREKAZKY, PREDMETY)
             fronta = deque([START])
             navstiveno = {START}
             nalezeno = set()
@@ -162,7 +166,11 @@ class TestMistnosti(unittest.TestCase):
                     if not any(telo(pygame.Vector2(dalsi)).colliderect(r) for r in prekazky):
                         navstiveno.add(dalsi)
                         fronta.append(dalsi)
-            self.assertTrue(set(predmety) <= nalezeno, (mistnost, set(predmety)-nalezeno))
+            cil = set(predmety)
+            if mistnost == 'archiv' and not mriz:
+                cil.remove('kartoteka')
+                self.assertNotIn('kartoteka', nalezeno)
+            self.assertTrue(cil <= nalezeno, (mistnost, cil-nalezeno))
 
     def test_nove_dialogy_se_vejdou(self):
         pygame.font.init()
