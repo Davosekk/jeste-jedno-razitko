@@ -113,5 +113,71 @@ class TestPohybu(unittest.TestCase):
             PREKAZKY.remove(zed)
 
 
+
+
+
+class TestMistnosti(unittest.TestCase):
+    def test_postup_a_zamky(self):
+        s = novy_stav()
+        proved('archiv', s)
+        proved('kancelar', s)
+        proved('zaznam', s)
+        proved('schvaleni', s)
+        self.assertNotIn('mistnost', s)
+        self.assertFalse(s.get('schvaleno'))
+        for a in ['sebrat', 'vyplnit', 'odevzdat', 'archiv']:
+            proved(a, s)
+        self.assertEqual(s['mistnost'], 'archiv')
+        proved('spatny_zaznam', s)
+        self.assertFalse(s.get('zaznam'))
+        proved('zaznam', s)
+        proved('recepce', s)
+        proved('kancelar', s)
+        self.assertEqual(s['mistnost'], 'kancelar')
+        proved('schvaleni', s)
+        proved('schvaleni', s)
+        self.assertTrue(s['schvaleno'])
+        proved('recepce', s)
+        self.assertTrue(s['zaznam'])
+        self.assertEqual(novy_stav(), {'formular': 0})
+
+    def test_pruchodnost_vsech_interakci(self):
+        # Prohledání skutečně průchozí plochy: každý předmět musí jít oslovit.
+        from collections import deque
+        from main import telo, PREDMETY, START
+        from mistnosti import aktivni_mapa
+        for mistnost in ['recepce', 'archiv', 'kancelar']:
+            prekazky, predmety = aktivni_mapa({'formular': 3, 'mistnost': mistnost}, PREKAZKY, PREDMETY)
+            fronta = deque([START])
+            navstiveno = {START}
+            nalezeno = set()
+            while fronta:
+                x, y = fronta.popleft()
+                bod = pygame.Vector2(x, y)
+                nalezeno.add(nejblizsi_predmet(bod, predmety, prekazky))
+                for dx, dy in [(8,0),(-8,0),(0,8),(0,-8)]:
+                    dalsi = (x+dx, y+dy)
+                    if dalsi in navstiveno or not (60 < dalsi[0] < 1090 and 190 < dalsi[1] < 585):
+                        continue
+                    if not any(telo(pygame.Vector2(dalsi)).colliderect(r) for r in prekazky):
+                        navstiveno.add(dalsi)
+                        fronta.append(dalsi)
+            self.assertTrue(set(predmety) <= nalezeno, (mistnost, set(predmety)-nalezeno))
+
+    def test_nove_dialogy_se_vejdou(self):
+        pygame.font.init()
+        for mistnost in ['recepce', 'archiv', 'kancelar']:
+            for formular in range(4):
+                for zaznam in [False, True]:
+                    for akce in ['archiv','recepce','kancelar','kartoteka','spatny_zaznam','zaznam','schvaleni']:
+                        s = {'formular': formular, 'mistnost': mistnost, 'zaznam': zaznam}
+                        d = proved(akce, s)
+                        if d:
+                            panel, _, tlacitka = rozlozeni_dialogu(d)
+                            self.assertGreaterEqual(panel.top, 0)
+                            self.assertLessEqual(panel.bottom, 720)
+                            self.assertTrue(all(panel.contains(t) for t in tlacitka))
+
+
 if __name__ == "__main__":
     unittest.main()
