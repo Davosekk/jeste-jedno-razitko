@@ -1,4 +1,4 @@
-# Ještě jedno razítko — Python 0.2
+# Ještě jedno razítko — Python 0.3
 
 Malá 2D příběhová adventura na téma **úřad a byrokracie**. Všechno se píše jako běžný Python kód ve VS Code. Používáme knihovnu Pygame, žádný herní editor.
 
@@ -32,7 +32,7 @@ python3 -m venv .venv
 - Esc: zavřít rozhovor nebo otevřít pauzu.
 - R: nabídnout restart.
 
-Úvodní úkol: získej formulář A-38, vyplň ho u stolku vpravo a odevzdej úřednici. Potom se otevře archiv vlevo. Projdi mezi regály, vyber záznam o sálu a vrať se spodními dveřmi. Se záznamem vstup do schvalovací kanceláře vpravo a obejdi přepážky k panu Dvořákovi. Dvě finální zakončení ještě nejsou hotová.
+Úvodní úkol: získej formulář A-38, vyplň ho u stolku vpravo a odevzdej úřednici. Potom se otevře archiv vlevo. Projdi mezi regály, vyber záznam o sálu a vrať se spodními dveřmi. Mříž v archivu otevřeš barevnými spínači podle pokynů na podlaze. Se záznamem vstup do kanceláře vpravo, vyřeš poplatek u pokladny a projdi kontrolní stanoviště podle tabule. Pak dojdi k panu Dvořákovi. Dvě finální zakončení ještě nejsou hotová.
 
 ## Co otevřít jako první
 
@@ -41,6 +41,10 @@ python3 -m venv .venv
 - `JAK_KOD_FUNGUJE.md` — vysvětlení základních principů.
 - `PLAN.md` — omezený rozsah a denní kroky.
 - `tests/test_hra.py` — ověření úkolu, dialogů a kolizí.
+
+## Nové ve verzi 0.3
+
+Dvě obtížnější části ve stávajících místnostech: čtyřkroková hádanka se třemi spínači a fyzickou mříží v archivu; výpočet poplatku a pořadí tří kontrolních stanovišť v kanceláři. Pokyny jsou přímo ve hře. Chyba v pořadí resetuje pouze rozpracovanou hádanku. Hotové hádanky, záznam i účtenka zůstávají při návratu mezi místnostmi. Restart smaže vše. Účtenka je třetí dokument. Celkem 25 automatických testů včetně všech 81 čtyřstiskových kombinací a dostupnosti stanovišť s uzavřenou i otevřenou mříží. Ruční dohrání verze 0.3 na Windows zatím neověřeno.
 
 ## Nové ve verzi 0.2
 

@@ -261,11 +261,11 @@ def main():
         kresli_mistnost(okno, stav, napis)
         kresli_hrace(okno, pozice)
         napis(okno, "JEŠTĚ JEDNO RAZÍTKO", 48, 24, 39)
-        napis(okno, "PYTHON • VERZE 0.2", 850, 37, 22, ZLATA)
+        napis(okno, "PYTHON • VERZE 0.3", 850, 37, 22, ZLATA)
         napis(okno, "AKTUÁLNÍ ÚKOL", 48, 100, 19, "#94b7ac")
         napis(okno, aktualni_ukol(stav), 212, 98, 24)
         napis(okno, "U SEBE", 48, 622, 18, "#94b7ac")
-        napis(okno, INVENTAR[stav["formular"]] + (" + záznam" if stav.get("zaznam") else ""), 48, 646, 20, ZLATA)
+        napis(okno, INVENTAR[stav["formular"]] + (" + záznam" if stav.get("zaznam") else "") + (" + účtenka" if stav.get("uctenka") else ""), 48, 646, 16, ZLATA)
         predmet = nejblizsi_predmet(pozice, predmety, prekazky)
         if predmet is not None and rozhovor is None:
             pygame.draw.circle(okno, "#ba883f", predmety[predmet][0], 21, 3)
