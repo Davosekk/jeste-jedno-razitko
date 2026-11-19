@@ -261,7 +261,7 @@ def main():
         kresli_mistnost(okno, stav, napis)
         kresli_hrace(okno, pozice)
         napis(okno, "JEŠTĚ JEDNO RAZÍTKO", 48, 24, 39)
-        napis(okno, "PYTHON • VERZE 0.3", 850, 37, 22, ZLATA)
+        napis(okno, "PYTHON • VERZE 0.4", 850, 37, 22, ZLATA)
         napis(okno, "AKTUÁLNÍ ÚKOL", 48, 100, 19, "#94b7ac")
         napis(okno, aktualni_ukol(stav), 212, 98, 24)
         napis(okno, "U SEBE", 48, 622, 18, "#94b7ac")

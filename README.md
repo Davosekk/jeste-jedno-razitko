@@ -1,4 +1,4 @@
-# Ještě jedno razítko — Python 0.3
+# Ještě jedno razítko — Python 0.4
 
 Malá 2D příběhová adventura na téma **úřad a byrokracie**. Všechno se píše jako běžný Python kód ve VS Code. Používáme knihovnu Pygame, žádný herní editor.
 
@@ -41,6 +41,10 @@ python3 -m venv .venv
 - `JAK_KOD_FUNGUJE.md` — vysvětlení základních principů.
 - `PLAN.md` — omezený rozsah a denní kroky.
 - `tests/test_hra.py` — ověření úkolu, dialogů a kolizí.
+
+## Nové ve verzi 0.4
+
+Po Dvořákově razítku se otevře další level: rezervace termínu. Přečti tabule ŠKOLA na recepci, ROZPIS za mříží v archivu a SPRÁVCE v kanceláři. Na terminálu REZERVACE vyber den, začátek a délku akce. Z 27 kombinací vyhovuje jedna. Nalezené informace lze znovu číst v poznámkách terminálu. Chybný návrh jde opravit, úspěšná rezervace zůstane do restartu. Pravidla jsou v samostatném čitelném `rezervace.py`. Počet místností, úředníků i dokumentů zůstává v původním rozsahu. Finální dvě zakončení ještě nejsou součástí této verze. Celkem 31 automatických testů včetně všech 27 návrhů a celého průchodu hrou až k rezervaci. Ruční hraní Windows verze 0.4 zatím neověřeno.
 
 ## Nové ve verzi 0.3
 

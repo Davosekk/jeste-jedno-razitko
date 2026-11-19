@@ -12,6 +12,7 @@ MAPY = {
                      (760, 198, 54, 242), (940, 225, 96, 48)],
         "predmety": {"recepce": ((576, 550), "Zpět na recepci"),
                      "kartoteka": ((990, 305), "Kartotéka sálu"),
+                     "rozpis": ((990, 470), "Rozpis sálu"),
                      "pokyny": ((140, 500), "Pokyny k mříži"),
                      "cerveny": ((180, 250), "Červený spínač"),
                      "modry": ((600, 250), "Modrý spínač"),
@@ -24,6 +25,8 @@ MAPY = {
         "predmety": {"recepce": ((576, 550), "Zpět na recepci"),
                      "schvaleni": ((955, 307), "Pan Dvořák"),
                      "tabule": ((310, 520), "Postup kontrol"),
+                     "spravce": ((770, 235), "Dostupnost správce"),
+                     "rezervace": ((710, 510), "Rezervační terminál"),
                      "pokladna": ((870, 500), "Pokladna"),
                      "evidence": ((150, 360), "Evidence"),
                      "pecet": ((930, 370), "Pečeť"),
@@ -36,7 +39,8 @@ def aktivni_mapa(stav, prekazky_recepce, predmety_recepce):
     mistnost = stav.get("mistnost", "recepce")
     if mistnost == "recepce":
         predmety = dict(predmety_recepce)
-        predmety.update({"archiv": ((105, 430), "Dveře do archivu"),
+        predmety.update({"skola": ((600, 420), "Požadavky školy"),
+                         "archiv": ((105, 430), "Dveře do archivu"),
                          "kancelar": ((1045, 430), "Schvalovací kancelář")})
         return prekazky_recepce, predmety
     mapa = MAPY[mistnost]
@@ -54,6 +58,9 @@ def kresli_mistnost(obraz, stav, napis):
             pygame.draw.rect(obraz, "#497f66" if otevreno else "#9c604d", (x, 390, 54, 75))
             napis(obraz, "E", x+20, 415, 28)
             napis(obraz, text, x-5, 470, 16, "#142529")
+        pygame.draw.circle(obraz, "#36575e", (600, 420), 18)
+        napis(obraz, "E", 594, 410, 22)
+        napis(obraz, "ŠKOLA", 577, 444, 16, "#142529")
         return
     mapa = MAPY[mistnost]
     pygame.draw.rect(obraz, mapa["barva"], (48, 150, 1056, 450))
@@ -76,7 +83,7 @@ def kresli_mistnost(obraz, stav, napis):
 
     # Stanoviště jsou na podlaze, takže hráče nemohou uvěznit při aktivaci.
     barvy = {"cerveny": "#bd5144", "modry": "#467caf", "zeleny": "#398a5b"}
-    nazvy = {"pokyny": "POKYNY", "tabule": "POSTUP", "pokladna": "POKLADNA",
+    nazvy = {"rozpis": "ROZPIS", "spravce": "SPRÁVCE", "rezervace": "REZERVACE", "pokyny": "POKYNY", "tabule": "POSTUP", "pokladna": "POKLADNA",
              "evidence": "EVIDENCE", "pecet": "PEČEŤ", "podpis": "PODPIS",
              "cerveny": "ČERVENÝ", "modry": "MODRÝ", "zeleny": "ZELENÝ"}
     for akce, ((x, y), _) in mapa["predmety"].items():

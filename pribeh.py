@@ -1,4 +1,5 @@
 """Příběh a pravidla hry. Tento soubor nepotřebuje Pygame."""
+from rezervace import AKCE_REZERVACE, proved_rezervaci
 
 
 def novy_stav():
@@ -13,6 +14,8 @@ def dialog(nadpis, text, moznosti):
 
 def proved(akce, stav):
     """Zpracuje rozhodnutí hráče a vrátí další dialog. None znamená zavřít."""
+    if akce in AKCE_REZERVACE:
+        return proved_rezervaci(akce, stav)
     formular = stav["formular"]
     # Obtížnější úkoly mají vlastní malou funkci, aby původní příběh zůstal čitelný.
     if akce in HADANKY:
@@ -95,7 +98,7 @@ def proved(akce, stav):
         if not stav.get("uctenka") or not stav.get("kontrola"):
             return dialog("Ještě kontrola a poplatek", "U pokladny vypočítej poplatek za turnaj. Potom projdi kontrolní stanoviště podle tabule. Až pak mohu přidat razítko.", [("Zpět", "zavrit")])
         stav["schvaleno"] = True
-        return dialog("Dnešní úsek splněný!", "Pan Dvořák zkontroloval záznam a přidal razítko. Prošel jsi všechny tři části úřadu. Konečné rozhodnutí a dvě zakončení doplníme v dalších dnech.", [("Prohlédnout úřad", "zavrit"), ("Začít znovu", "restart")])
+        return dialog("Dnešní úsek splněný!", "Pan Dvořák zkontroloval záznam a přidal razítko. Teď zbývá najít vhodný termín turnaje. Projdi tabule ŠKOLA na recepci, ROZPIS v archivu a SPRÁVCE tady v kanceláři. Návrh sestav na rezervačním terminálu.", [("Prohlédnout úřad", "zavrit"), ("Začít znovu", "restart")])
     raise ValueError("Neznámá akce: " + akce)
 
 
@@ -109,8 +112,10 @@ INVENTAR = ["Prázdné kapsy", "A-38 • nevyplněný", "A-38 • podepsaný", "
 
 
 def aktualni_ukol(stav):
+    if stav.get("termin"):
+        return "Termín rezervován: čtvrtek 15–17 h. Level hotový."
     if stav.get("schvaleno"):
-        return "Tři části úřadu splněny. Záznam má kontrolní razítko."
+        return "Rezervace: najdi ŠKOLU, ROZPIS a SPRÁVCE."
     if stav["formular"] < 3:
         return UKOLY[stav["formular"]]
     if not stav.get("zaznam"):
