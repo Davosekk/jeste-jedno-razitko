@@ -169,6 +169,8 @@ class TestMistnosti(unittest.TestCase):
             cil = set(predmety)
             if mistnost == 'archiv' and not mriz:
                 cil.remove('kartoteka')
+                cil.remove('rozpis')
+                self.assertNotIn('rozpis', nalezeno)
                 self.assertNotIn('kartoteka', nalezeno)
             self.assertTrue(cil <= nalezeno, (mistnost, cil-nalezeno))
 
