@@ -1,6 +1,28 @@
-# Ještě jedno razítko — Python 0.5
+# Ještě jedno razítko
+
+**Finální školní vydání 0.5 · Python 3.12 + Pygame**
 
 Malá 2D příběhová adventura na téma **úřad a byrokracie**. Všechno se píše jako běžný Python kód ve VS Code. Používáme knihovnu Pygame, žádný herní editor.
+
+## Stáhnout a hrát (Windows)
+
+**[STÁHNOUT HRU PRO WINDOWS — nejnovější vydání](https://github.com/Davosekk/jeste-jedno-razitko/releases/latest)**
+
+1. Otevři odkaz a v části **Assets** stáhni **Jeste-jedno-razitko-Windows.zip**.
+2. ZIP rozbal do složky.
+3. Spusť **Jeste_jedno_razitko.exe**. Krátký návod je uvnitř v `NAVOD.txt`.
+
+Pro hraní na 64bitových Windows není potřeba instalovat Python, Pygame ani VS Code. Hra běží místně a bez internetu. Přímo na stránce GitHubu se nespouští. Balíčky **Source code** obsahují zdrojové soubory pro vývoj, nikoliv hotovou aplikaci.
+
+Pokud je repozitář soukromý, musí mít učitel přístup ke GitHub účtu pozvanému do repozitáře. U veřejného repozitáře je hra ke stažení bez přihlášení.
+
+## Zadání a obsah hry
+
+- **Vylosovaný žánr:** Interaktivní fikce / adventura.
+- **Vylosované téma:** Úřad a byrokracie.
+- **Cíl:** vyřídit povolení na školní turnaj pomocí dokumentů, rozhovorů a logických hádanek.
+- **Herní prvky:** ovládaná postava shora, kolize, interakce, tři místnosti, dva úředníci, tři dokumenty, dva konce a restart.
+- **Proč adventura:** postup závisí na získávání informací, použití dokumentů, řešení hádanek a rozhodování v příběhu. Závěrečná volba ovlivní výsledek žádosti.
 
 ## Spuštění ve VS Code
 
@@ -62,20 +84,13 @@ Dvě obtížnější části ve stávajících místnostech: čtyřkroková hád
 
 Tři průchozí místnosti, zamčený archiv, podmíněný vstup ke schválení, regály a přepážky s kolizemi, výběr správného záznamu a druhý úředník. Mapy jsou v `mistnosti.py`. Celkem 20 testů včetně dostupnosti všech interakcí, návaznosti úkolů a rozměrů dialogů.
 
-## Windows .exe
+## Vlastní sestavení Windows .exe
 
-Aktuální aplikaci hledej v posledním úspěšném běhu na kartě **Actions**. Původní verze 0.1 je v [prvním sestavení](https://github.com/Davosekk/jeste-jedno-razitko/actions/runs/44131689905) dole v části **Artifacts → Jeste-jedno-razitko-Windows**. Stáhni ZIP, rozbal ho a spusť `Jeste_jedno_razitko.exe`. Je potřeba být přihlášený k účtu s přístupem do tohoto soukromého repozitáře. Tento výstup je uchován 14 dní; nový lze vytvořit v Actions přes Run workflow.
+Hotovou hru najdeš v odkazu **Stáhnout a hrát** nahoře. Vydání v Releases nemá čtrnáctidenní limit pracovních výstupů z Actions.
 
-Vlastní .exe můžeš sestavit v terminálu VS Code na Windows:
+Pro vlastní sestavení na Windows nainstaluj Python 3.12 a spusť `vytvor_exe.bat`. Skript vytvoří prostředí `.venv-build`, nainstaluje knihovny, spustí testy a sestaví `dist/Jeste_jedno_razitko.exe`. Záměrně používá Python 3.12, aby sestavení nezáviselo na jiné výchozí verzi Pythonu.
 
-```powershell
-.venv\Scripts\python.exe -m pip install -r requirements-build.txt
-.venv\Scripts\python.exe -m PyInstaller --noconfirm --clean --onefile --windowed --name Jeste_jedno_razitko main.py
-```
-
-Výsledek je `dist/Jeste_jedno_razitko.exe`. Hráč už Python ani Pygame instalovat nemusí. Skript `vytvor_exe.bat` provede instalaci závislostí, testy a sestavení přes Python dostupný jako `python`.
-
-GitHub Actions postup `windows.yml` spustí testy a sestaví .exe na Windows po odeslání do repozitáře.
+GitHub Actions provádí testy a sestavení při pushi do `main`. Při publikaci vydání navíc připojí ZIP s aplikací a návodem do jeho **Assets**, spolu s kontrolním součtem `SHA256SUMS.txt`.
 
 ## Testy
 

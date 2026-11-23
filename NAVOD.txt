@@ -1,0 +1,31 @@
+JEŠTĚ JEDNO RAZÍTKO — verze 0.5
+Školní 2D příběhová adventura: Úřad a byrokracie
+
+SPUŠTĚNÍ NA WINDOWS (64 bitů)
+1. Rozbal celý ZIP do složky.
+2. Dvakrát klikni na Jeste_jedno_razitko.exe.
+Python, Pygame ani VS Code pro hraní nepotřebuješ.
+Hra běží místně a nepotřebuje internet. Na webu GitHubu se nespouští.
+
+OVLÁDÁNÍ
+WASD nebo šipky: pohyb
+E: interakce s blízkým předmětem nebo úředníkem
+Myš nebo šipky + Enter: volba v dialogu
+Esc: zavření dialogu nebo pauza
+R: nabídka restartu
+
+CÍL HRY
+Vyřiď povolení na školní turnaj. Začni formulářem A-38 na recepci,
+vyplň jej u stolku a odevzdej paní Novotné. Další postup zjistíš
+z dialogů a tabulí. Projdeš recepcí, archivem a kanceláří.
+Na konci se vrať k paní Novotné. Poslední rozhodnutí má dva výsledky.
+Po obou koncích můžeš hrát znovu. Hra neukládá průběh.
+
+PROJEKT A ZDROJOVÝ KÓD
+https://github.com/Davosekk/jeste-jedno-razitko
+Python 3.12 + Pygame, běžné soubory .py pro VS Code.
+
+OVĚŘENÍ
+37 automatických testů ověřuje pravidla, obě cesty, kolize a restart.
+Windows EXE sestavuje GitHub Actions. Ruční dohrání tohoto EXE
+na Windows zatím není ověřené.
