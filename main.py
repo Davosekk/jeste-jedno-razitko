@@ -193,7 +193,7 @@ def main():
     pygame.display.init()
     pygame.font.init()
     okno = pygame.display.set_mode((SIRKA, VYSKA), pygame.SCALED | pygame.RESIZABLE)
-    pygame.display.set_caption("Ještě jedno razítko — Python 0.2")
+    pygame.display.set_caption("Ještě jedno razítko — Python 0.5")
     hodiny = pygame.time.Clock()
     stav = novy_stav()
     pozice = pygame.Vector2(START)
@@ -216,6 +216,8 @@ def main():
                 if udalost.type == pygame.KEYDOWN:
                     if udalost.key == pygame.K_ESCAPE:
                         akce = "zavrit"
+                    elif udalost.key == pygame.K_r and stav.get("zaver"):
+                        akce = "novy_zacatek"
                     elif udalost.key in (pygame.K_UP, pygame.K_DOWN):
                         krok = 1 if udalost.key == pygame.K_DOWN else -1
                         vybrano = (vybrano+krok) % len(rozhovor["moznosti"])
@@ -261,7 +263,7 @@ def main():
         kresli_mistnost(okno, stav, napis)
         kresli_hrace(okno, pozice)
         napis(okno, "JEŠTĚ JEDNO RAZÍTKO", 48, 24, 39)
-        napis(okno, "PYTHON • VERZE 0.4", 850, 37, 22, ZLATA)
+        napis(okno, "PYTHON • VERZE 0.5", 850, 37, 22, ZLATA)
         napis(okno, "AKTUÁLNÍ ÚKOL", 48, 100, 19, "#94b7ac")
         napis(okno, aktualni_ukol(stav), 212, 98, 24)
         napis(okno, "U SEBE", 48, 622, 18, "#94b7ac")

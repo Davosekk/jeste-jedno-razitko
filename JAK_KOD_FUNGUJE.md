@@ -48,3 +48,10 @@ Na konci `main.py` najdi `while bezi:`. Opakuje se přibližně 60× za sekundu:
 - Spusť testy a ověř, že jsi nezměnil pravidla hry nechtěně.
 
 Kreslení nábytku si nech nakonec. Obsahuje hlavně opakované obdélníky a není nutné mu rozumět, abys pochopil úkol a herní smyčku.
+
+
+## Dva konce příběhu (verze 0.5)
+
+`zavery.py` obsahuje poslední rozhovor s úřednicí. `proved_zaver()` nejprve ověří recepci, dokumenty, kontrolu, razítko a rezervaci. Volbu uloží do `volba_zaveru`; až potvrzení nastaví `zaver` na `povoleno` nebo `zamitnuto`. Text výsledku vrací `konec_pribehu()`.
+
+Na začátku `proved()` se kontroluje `stav.get("zaver")`. Po dokončení se vrací závěrečný dialog a stav už se nemění. Tlačítka `restart` a `konec` zachytává hlavní smyčka v `main.py`. Restart vytvoří `novy_stav()` a vrátí postavu na start, takže zmizí i rezervace a výsledek.

@@ -65,7 +65,7 @@ def proved_rezervaci(akce, stav):
             return dialog(nadpis, text, [("Zpět do poznámek", "poznamky")])
         return dialog("Podklad chybí", "Nejdřív najdi původní tabuli.", zpet)
     if stav.get("termin"):
-        return dialog("Termín už je rezervovaný", "Čtvrtek 15:00–17:00. Rezervace je připojená k žádosti. Tento level je hotový; závěrečné rozhodnutí ještě doplníme.", zpet)
+        return dialog("Termín už je rezervovaný", "Čtvrtek 15:00–17:00. Rezervace je připojená k žádosti. Vrať se spodními dveřmi na recepci k paní Novotné pro poslední kontrolu a povolení.", zpet)
     if akce == "rezervace":
         chybi = [PODKLADY[k][1] for k in PODKLADY if not stav.get("info_" + k)]
         if chybi:

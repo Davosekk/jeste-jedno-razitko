@@ -1,5 +1,6 @@
 """Příběh a pravidla hry. Tento soubor nepotřebuje Pygame."""
 from rezervace import AKCE_REZERVACE, proved_rezervaci
+from zavery import AKCE_ZAVERU, proved_zaver, konec_pribehu
 
 
 def novy_stav():
@@ -14,6 +15,11 @@ def dialog(nadpis, text, moznosti):
 
 def proved(akce, stav):
     """Zpracuje rozhodnutí hráče a vrátí další dialog. None znamená zavřít."""
+    # Dokončený příběh už neměníme. Restart a ukončení obsluhuje hlavní smyčka.
+    if stav.get("zaver") and akce != "novy_zacatek":
+        return konec_pribehu(stav)
+    if akce in AKCE_ZAVERU:
+        return proved_zaver(akce, stav)
     if akce in AKCE_REZERVACE:
         return proved_rezervaci(akce, stav)
     formular = stav["formular"]
@@ -29,6 +35,8 @@ def proved(akce, stav):
     if akce == "novy_zacatek":
         return dialog("Začít znovu?", "Obnoví se hráč i všechny dokumenty.", [("Zpět do hry", "zavrit"), ("Ano, začít znovu", "restart")])
     if akce == "urednice":
+        if stav.get("termin"):
+            return proved_zaver("zaver", stav)
         if formular == 3:
             return dialog("Paní Novotná", "Žádost je přijatá. Odemkla jsem vám archiv vlevo. Najděte záznam o sálu a odneste ho do kanceláře vpravo.", [("Zpět", "zavrit"), ("Zkusit znovu", "restart")])
         return dialog("Paní Novotná • příjem žádostí", "Dobrý den. Co potřebujete vyřídit?", [("Co potřebuji na školní turnaj?", "napoveda"), ("Chci odevzdat žádost", "odevzdat"), ("Na shledanou", "zavrit")])
@@ -112,8 +120,10 @@ INVENTAR = ["Prázdné kapsy", "A-38 • nevyplněný", "A-38 • podepsaný", "
 
 
 def aktualni_ukol(stav):
+    if stav.get("zaver"):
+        return "Turnaj povolen. Příběh dokončen." if stav["zaver"] == "povoleno" else "Povolení zamítnuto. Můžeš začít znovu."
     if stav.get("termin"):
-        return "Termín rezervován: čtvrtek 15–17 h. Level hotový."
+        return "Zpět na recepci: poslední kontrola u paní Novotné."
     if stav.get("schvaleno"):
         return "Rezervace: najdi ŠKOLU, ROZPIS a SPRÁVCE."
     if stav["formular"] < 3:

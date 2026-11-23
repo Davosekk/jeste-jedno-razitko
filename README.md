@@ -1,4 +1,4 @@
-# Ještě jedno razítko — Python 0.4
+# Ještě jedno razítko — Python 0.5
 
 Malá 2D příběhová adventura na téma **úřad a byrokracie**. Všechno se píše jako běžný Python kód ve VS Code. Používáme knihovnu Pygame, žádný herní editor.
 
@@ -32,7 +32,7 @@ python3 -m venv .venv
 - Esc: zavřít rozhovor nebo otevřít pauzu.
 - R: nabídnout restart.
 
-Úvodní úkol: získej formulář A-38, vyplň ho u stolku vpravo a odevzdej úřednici. Potom se otevře archiv vlevo. Projdi mezi regály, vyber záznam o sálu a vrať se spodními dveřmi. Mříž v archivu otevřeš barevnými spínači podle pokynů na podlaze. Se záznamem vstup do kanceláře vpravo, vyřeš poplatek u pokladny a projdi kontrolní stanoviště podle tabule. Pak dojdi k panu Dvořákovi. Dvě finální zakončení ještě nejsou hotová.
+Úvodní úkol: získej formulář A-38, vyplň ho u stolku vpravo a odevzdej úřednici. Potom se otevře archiv vlevo. Projdi mezi regály, vyber záznam o sálu a vrať se spodními dveřmi. Mříž v archivu otevřeš barevnými spínači podle pokynů na podlaze. Se záznamem vstup do kanceláře vpravo, vyřeš poplatek u pokladny a projdi kontrolní stanoviště podle tabule. Pak dojdi k panu Dvořákovi, dokonči rezervaci termínu a vrať se k paní Novotné na recepci. Při poslední kontrole rozhodneš o účelu akce; potvrzení žádosti vede k jednomu ze dvou konců.
 
 ## Co otevřít jako první
 
@@ -41,6 +41,14 @@ python3 -m venv .venv
 - `JAK_KOD_FUNGUJE.md` — vysvětlení základních principů.
 - `PLAN.md` — omezený rozsah a denní kroky.
 - `tests/test_hra.py` — ověření úkolu, dialogů a kolizí.
+
+## Nové ve verzi 0.5
+
+Dva konce navazující na rezervaci: **Turnaj povolen!** a **Razítko nestačilo**. Na recepci u paní Novotné oprav chybný účel akce, nebo jej ponech. Před konečným odevzdáním lze volbu změnit nebo rozhovor zavřít. Výsledek je jasně vysvětlený před potvrzením. Po konci lze restartovat tlačítkem nebo klávesou R, případně hru ukončit. Esc konec nezruší a dokončený výsledek už nelze přepsat.
+
+Pravidla a texty jsou v `zavery.py`. Funkce `proved()` v `pribeh.py` hlídá dokončený příběh; `main.py` obsluhuje restart a ukončení. Počet místností, úředníků a dokumentů se nemění.
+
+Prošlo 37 automatických testů: obě kompletní cesty od prázdného inventáře, zákaz předčasného konce, změna volby, rozměry dialogů i restart klávesnicí přes skutečnou herní smyčku. Automatický test okna používá skrytý obrazový ovladač; ruční dohrání `.exe` na Windows zatím není ověřené.
 
 ## Nové ve verzi 0.4
 
