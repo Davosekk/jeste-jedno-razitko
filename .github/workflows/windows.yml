@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  release:
+    types: [published]
 
 permissions:
   contents: read
@@ -33,3 +35,29 @@ jobs:
           path: dist/Jeste_jedno_razitko.exe
           if-no-files-found: error
           retention-days: 14
+
+  release:
+    if: github.event_name == 'release'
+    needs: windows
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Jeste-jedno-razitko-Windows
+          path: balicek
+      - name: Zabaleni hry a navodu
+        run: |
+          cp NAVOD.txt balicek/NAVOD.txt
+          cd balicek
+          zip ../Jeste-jedno-razitko-Windows.zip Jeste_jedno_razitko.exe NAVOD.txt
+          cd ..
+          sha256sum Jeste-jedno-razitko-Windows.zip > SHA256SUMS.txt
+      - name: Pripojeni hry k vydani
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$RELEASE_TAG" Jeste-jedno-razitko-Windows.zip SHA256SUMS.txt
